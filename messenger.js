@@ -11,12 +11,12 @@ messenger = (function () {
                 canHandle : canHandle
             });
         },
-        notify : function (eventName, sender) {
+        notify : function (eventName, data) {
             var listeners = events[eventName];
             for (var i = 0; i < listeners.length; i++) {
                 var listener = listeners[i];
-                if (listener.canHandle(sender)) {
-                    listener.handle(sender);
+                if (listener.canHandle(data)) {
+                    listener.handle(data);
                 }
             }
         }
@@ -49,21 +49,21 @@ InputControl.prototype.onInputChanged = function () {
 
 var nameInputControl = new InputControl("name-input", {
     onInputChanged : function () {
-        messenger.notify("nameChanged", this);
+        messenger.notify("nameChanged", this.value);
     }
 });
 var nameSelectControl = new InputControl("name-select", {
     onInputChanged : function () {
-        messenger.notify("nameChanged", this);
+        messenger.notify("nameChanged", this.value);
     }
 });
 
 var helloUsernameControl = new Control("hello-username", {
     init : function (that) {
-        messenger.listen("nameChanged", function (sender) {
-            that.element.innerHTML = sender.value;
-        }, function (sender) {
-            return sender.value != "bad";
+        messenger.listen("nameChanged", function (data) {
+            that.element.innerHTML = data;
+        }, function (data) {
+            return data != "bad";
         });
     }
 });
